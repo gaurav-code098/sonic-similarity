@@ -16,7 +16,7 @@ export default function App() {
   // --- SIMPLIFIED CONFIGURATION ---
   // Works perfectly on your laptop. No IP needed.
   // ✅ CORRECT CODE
-  const API_BASE = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+  const API_BASE = "https://gaurav-code098-sonic-backend-api.hf.space";
   // -------------------------------
 
   const backgroundLayer = useMemo(() => <Background3D />, []);
