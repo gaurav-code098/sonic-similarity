@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+requests
+yt-dlp
+librosa
+pandas
+numpy
+scikit-learn
+python-multipart
