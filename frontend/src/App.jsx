@@ -13,11 +13,10 @@ export default function App() {
   const [playingId, setPlayingId] = useState(null);
   const audioRef = useRef(new Audio());
 
-  // --- SIMPLIFIED CONFIGURATION ---
-  // Works perfectly on your laptop. No IP needed.
-  // ✅ CORRECT CODE
-  const BASE_URL = "https://gaurav-code098-sonic-backend-api.hf.space";
-  // -------------------------------
+  // --- CONFIGURATION ---
+  // ✅ FIXED: Points directly to your Hugging Face Backend
+  const API_BASE = "https://gaurav-code098-sonic-backend-api.hf.space";
+  // ---------------------
 
   const backgroundLayer = useMemo(() => <Background3D />, []);
 
@@ -47,11 +46,11 @@ export default function App() {
     setData(null);
 
     try {
-      const res = await axios.post(`${BASE_URL}/scan`, { query });
+      // ✅ FIXED: Used API_BASE instead of BASE_URL
+      const res = await axios.post(`${API_BASE}/scan`, { query });
       setData(res.data);
     } catch (err) {
       console.error(err);
-      // Simplified Error Message
       alert("Could not connect to the Backend. Is the Python server running?");
     }
     setLoading(false);
@@ -62,7 +61,8 @@ export default function App() {
       audioRef.current.pause();
       setPlayingId(null);
     } else {
-      const url = `${BASE_URL}/songs/${encodeURIComponent(filename)}`;
+      // ✅ FIXED: Used API_BASE instead of BASE_URL
+      const url = `${API_BASE}/songs/${encodeURIComponent(filename)}`;
       audioRef.current.src = url;
       audioRef.current.play().catch(e => console.log("Playback error:", e));
       setPlayingId(id);
