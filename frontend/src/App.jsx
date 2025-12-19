@@ -15,7 +15,7 @@ export default function App() {
 
   // --- CONFIGURATION ---
   // ✅ FIXED: Points directly to your Hugging Face Backend
-  const API_BASE = "https://gaurav-code098-sonic-backend-api.hf.space";
+
 
   const API_BASE = "https://gaurav-code098-sonic-backend-api.hf.space";
   
