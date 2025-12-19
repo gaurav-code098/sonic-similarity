@@ -16,7 +16,7 @@ export default function App() {
   // --- SIMPLIFIED CONFIGURATION ---
   // Works perfectly on your laptop. No IP needed.
   // ✅ CORRECT CODE
-  const API_BASE = "https://gaurav-code098-sonic-backend-api.hf.space";
+  const BASE_URL = "https://gaurav-code098-sonic-backend-api.hf.space";
   // -------------------------------
 
   const backgroundLayer = useMemo(() => <Background3D />, []);
