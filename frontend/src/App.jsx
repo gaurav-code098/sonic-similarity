@@ -15,7 +15,8 @@ export default function App() {
 
   // --- SIMPLIFIED CONFIGURATION ---
   // Works perfectly on your laptop. No IP needed.
-  const BASE_URL = "http://127.0.0.1:8000"; 
+  // ✅ CORRECT CODE
+  const API_BASE = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
   // -------------------------------
 
   const backgroundLayer = useMemo(() => <Background3D />, []);
