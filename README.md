@@ -5,7 +5,7 @@ Live Site: [sonicsimilarity.tech](https://sonicsimilarity.tech)
 
 ---
 <p align="center">
-  <img src="frontend/screenshot1.png" width="50%"  />
+  <img src="frontend/screenshot1.png" width="50%"  /> <br>
   <img src="frontend/screenshot2.png" width="45%" />
 </p>
 
