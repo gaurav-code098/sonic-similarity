@@ -4,6 +4,10 @@
 Live Site: [sonicsimilarity.tech](https://sonicsimilarity.tech)
 
 ---
+<p align="center">
+  <img src="frontend/screenshot1.png" width="50%"  />
+  <img src="frontend/screenshot2.png" width="45%" />
+</p>
 
 ## 🚀 Overview
 Sonic Similarity is an interactive 3D platform that maps audio relationships using vector analysis. By processing audio signals and calculating their mathematical similarity, the app projects audio samples into a 3D space, allowing users to explore "sonic neighborhoods" visually.
@@ -33,9 +37,4 @@ Sonic Similarity is an interactive 3D platform that maps audio relationships usi
 
 ---
 
-## 📦 Installation & Setup
 
-1. **Clone the repository**
-   ```bash
-   git clone [https://github.com/gaurav-code098/sonic-similarity.git](https://github.com/gaurav-code098/sonic-similarity.git)
-   cd sonic-similarity/frontend
