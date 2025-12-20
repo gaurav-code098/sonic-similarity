@@ -1,4 +1,4 @@
-# 🎵 Sonic Similarity Explorer
+# Sonic Similarity Explorer
 > **Real-time Audio Signal Processing & Vector Similarity Visualization.**
 
 Live Site: [sonicsimilarity.tech](https://sonicsimilarity.tech)
