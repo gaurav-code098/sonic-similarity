@@ -31,7 +31,7 @@ Sonic Similarity is an interactive 3D platform that maps audio relationships usi
 - **Lucide React** (Iconography)
 
 ### Backend
-- **Python / Flask** (Audio engine)
+- **Python / FastAPI** (Audio engine)
 - **itune API** (Audio data retrieval)
 - **Vector Analysis** (Cosine similarity & signal processing)
 
