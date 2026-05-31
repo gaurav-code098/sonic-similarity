@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import axios from 'axios';
 import Background3D from './Visuals';
 import SonicMap from './SonicMap';
@@ -15,10 +15,25 @@ export default function App() {
 
   // --- CONFIGURATION ---
   const API_BASE = "https://gaurav-code098-sonic-backend-api.hf.space";
-  console.log("🚀 DEBUG: My API URL is:", API_BASE);
 
   // Memoize background
   const backgroundLayer = useMemo(() => <Background3D />, []);
+
+  // Handle audio cleanup and track completion
+  useEffect(() => {
+    const currentAudio = audioRef.current;
+    
+    // Reset play state when song finishes
+    const handleEnded = () => setPlayingId(null);
+    currentAudio.addEventListener('ended', handleEnded);
+
+    // Cleanup on unmount
+    return () => {
+      currentAudio.removeEventListener('ended', handleEnded);
+      currentAudio.pause();
+      currentAudio.src = "";
+    };
+  }, []);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -66,19 +81,18 @@ export default function App() {
       
       {backgroundLayer}
 
+      {/* Main Content Wrapper - Fixed scoping so it wraps everything */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 flex flex-col items-center">
         
-       
+        {/* --- HEADER --- */}
+        <h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-[0.1em] uppercase bg-clip-text text-transparent bg-gradient-to-b from-white via-zinc-400 to-zinc-800 whitespace-nowrap pb-4 pr-2 leading-normal drop-shadow-2xl">
+          Sonic Similarity
+        </h1>
 
-          <h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-[0.1em] uppercase bg-clip-text text-transparent bg-gradient-to-b from-white via-zinc-400 to-zinc-800 whitespace-nowrap pb-4 pr-2 leading-normal drop-shadow-2xl">
-            Sonic Similarity
-          </h1>
-
-          <div className="flex flex-col items-center gap-2 font-light tracking-wide text-xs md:text-base -mt-2">
-            <p className="text-zinc-400 drop-shadow-md text-center px-4">
-              Real-time Audio Signal Processing & Vector Analysis
-            </p>
-          </div>
+        <div className="flex flex-col items-center gap-2 font-light tracking-wide text-xs md:text-base -mt-2 mb-12">
+          <p className="text-zinc-400 drop-shadow-md text-center px-4">
+            Real-time Audio Signal Processing & Vector Analysis
+          </p>
         </div>
 
         {/* --- SEARCH BAR --- */}
@@ -106,40 +120,40 @@ export default function App() {
 
         {/* --- LOADING --- */}
         {loading && (
-           <div className="flex flex-col items-center animate-pulse mb-20 space-y-6">
-             <div className="relative">
-                <div className="absolute inset-0 bg-cyan-500 blur-xl opacity-20 animate-pulse"></div>
-                <Activity className="relative w-16 h-16 text-cyan-500/50 animate-bounce-slow" strokeWidth={1} />
-             </div>
-             <div className="text-center space-y-1">
-               <p className="text-cyan-500 font-mono text-xs tracking-[0.2em] uppercase"> downloading audio stream </p>
-               <p className="text-zinc-600 text-[10px] tracking-widest uppercase"> calculating spectral mfcc vectors </p>
-             </div>
-           </div>
+          <div className="flex flex-col items-center animate-pulse mb-20 space-y-6">
+            <div className="relative">
+              <div className="absolute inset-0 bg-cyan-500 blur-xl opacity-20 animate-pulse"></div>
+              <Activity className="relative w-16 h-16 text-cyan-500/50 animate-bounce-slow" strokeWidth={1} />
+            </div>
+            <div className="text-center space-y-1">
+              <p className="text-cyan-500 font-mono text-xs tracking-[0.2em] uppercase"> downloading audio stream </p>
+              <p className="text-zinc-600 text-[10px] tracking-widest uppercase"> calculating spectral mfcc vectors </p>
+            </div>
+          </div>
         )}
 
         {/* --- RESULTS --- */}
-        {data && (
+        {data && data.matches && (
           <div className="w-full animate-fade-in-up">
             
             {/* LIST VIEW */}
             <div className="max-w-3xl mx-auto mb-32">
               <div className="flex items-end justify-between mb-8 border-b border-white/5 pb-4">
                 <div className="flex items-center gap-3">
-                   <div className="p-2 bg-zinc-900/50 rounded-lg border border-white/5">
-                      <Disc className="w-4 h-4 text-cyan-500" />
-                   </div>
-                   <div>
-                     <h3 className="text-lg font-medium text-white tracking-wide">Sonic Matches</h3>
-                     <p className="text-[10px] text-zinc-500 uppercase tracking-widest">Cosine Similarity Index</p>
-                   </div>
+                  <div className="p-2 bg-zinc-900/50 rounded-lg border border-white/5">
+                    <Disc className="w-4 h-4 text-cyan-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-medium text-white tracking-wide">Sonic Matches</h3>
+                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest">Cosine Similarity Index</p>
+                  </div>
                 </div>
               </div>
 
               <div className="space-y-2">
                 {data.matches.map((song, i) => (
                   <div 
-                    key={i}
+                    key={song.id || i}
                     onClick={() => togglePlay(song)}
                     className={`
                       group relative flex items-center justify-between px-4 py-3 rounded-xl border cursor-pointer transition-all duration-500
@@ -151,12 +165,12 @@ export default function App() {
                     <div className="flex items-center gap-4 overflow-hidden">
                       <div className="relative w-12 h-12 shrink-0 rounded-lg overflow-hidden border border-white/10 group-hover:border-white/30 transition-all">
                         {song.image ? (
-                           <img src={song.image} alt={song.name} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                          <img src={song.image} alt={song.name} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                         ) : (
-                           <div className="w-full h-full bg-zinc-900" />
+                          <div className="w-full h-full bg-zinc-900" />
                         )}
                         <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-[1px]">
-                           {playingId === song.id ? <Pause size={16} className="text-cyan-400" fill="currentColor" /> : <Play size={16} className="text-white" fill="currentColor" />}
+                          {playingId === song.id ? <Pause size={16} className="text-cyan-400" fill="currentColor" /> : <Play size={16} className="text-white" fill="currentColor" />}
                         </div>
                       </div>
                       <div className="flex flex-col gap-0.5 min-w-0">
@@ -168,10 +182,10 @@ export default function App() {
                       </div>
                     </div>
                     <div className="flex items-center gap-4 pl-4 shrink-0">
-                        <div className="h-8 w-[1px] bg-white/5"></div>
-                        <span className="text-xl font-light text-zinc-600 font-mono group-hover:text-zinc-400 transition-colors">
-                          {song.score}<span className="text-xs align-top opacity-50">%</span>
-                        </span>
+                      <div className="h-8 w-[1px] bg-white/5"></div>
+                      <span className="text-xl font-light text-zinc-600 font-mono group-hover:text-zinc-400 transition-colors">
+                        {song.score}<span className="text-xs align-top opacity-50">%</span>
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -180,25 +194,25 @@ export default function App() {
 
             {/* --- MAP VIEW (FIXED ALIGNMENT) --- */}
             <div className="w-full relative px-4 mt-20 mb-32 flex justify-center">
-               
-               {/* Container: Centered, Fixed Height, Max Width */}
-               <div className="w-full max-w-5xl h-[600px] border border-white/5 rounded-3xl bg-black/20 overflow-hidden relative shadow-2xl shadow-black/50 flex items-center justify-center">
-                   
-                   {/* Label */}
-                   <div className="absolute top-6 left-0 right-0 flex justify-center z-10 pointer-events-none">
-                      <span className="text-[10px] uppercase tracking-[0.3em] text-cyan-400 font-bold bg-black/40 backdrop-blur-md px-4 py-1.5 rounded-full border border-cyan-500/20 shadow-[0_0_15px_rgba(34,211,238,0.2)]">
-                        Projection Matrix
-                      </span>
-                   </div>
+              
+              {/* Container: Centered, Fixed Height, Max Width */}
+              <div className="w-full max-w-5xl h-[600px] border border-white/5 rounded-3xl bg-black/20 overflow-hidden relative shadow-2xl shadow-black/50 flex items-center justify-center">
+                
+                {/* Label */}
+                <div className="absolute top-6 left-0 right-0 flex justify-center z-10 pointer-events-none">
+                  <span className="text-[10px] uppercase tracking-[0.3em] text-cyan-400 font-bold bg-black/40 backdrop-blur-md px-4 py-1.5 rounded-full border border-cyan-500/20 shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                    Projection Matrix
+                  </span>
+                </div>
 
-                   {/* Canvas Wrapper */}
-                   <div className="w-full h-full absolute inset-0 z-0">
-                       <SonicMap data={data.matches} />
-                   </div>
-                   
-                   {/* Grid Background */}
-                   <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
-               </div>
+                {/* Canvas Wrapper */}
+                <div className="w-full h-full absolute inset-0 z-0">
+                  <SonicMap data={data.matches} />
+                </div>
+                
+                {/* Grid Background */}
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
+              </div>
             </div>
 
           </div>
