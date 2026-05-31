@@ -68,17 +68,7 @@ export default function App() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 flex flex-col items-center">
         
-        {/* --- HEADER --- */}
-        <div className="text-center mb-16 space-y-6 w-full max-w-screen-xl px-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/10 bg-cyan-950/10 backdrop-blur-sm">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-cyan-500"></span>
-            </span>
-            <span className="text-[10px] font-bold tracking-[0.2em] text-cyan-500/60 uppercase">
-              V2.5 // iTunes Neural Engine
-            </span>
-          </div>
+       
 
           <h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-[0.1em] uppercase bg-clip-text text-transparent bg-gradient-to-b from-white via-zinc-400 to-zinc-800 whitespace-nowrap pb-4 pr-2 leading-normal drop-shadow-2xl">
             Sonic Similarity
